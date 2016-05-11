@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from fizzbuzz.models import FizzBuzz
 from fizzbuzz.serializers import FizzBuzzSerializer
+from django.http import Http404
 
 class FizzBuzzView(APIView):
 
@@ -12,7 +13,7 @@ class FizzBuzzView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        request.data['useragent'] =request.META.get('HTTP_USER_AGENT', '')
+        request.data['useragent'] = request.META.get('HTTP_USER_AGENT', '')
 
         serializer = FizzBuzzSerializer(data=request.data)
         if serializer.is_valid():
@@ -22,14 +23,12 @@ class FizzBuzzView(APIView):
 
 
 class FizzBuzzDetailView(APIView):
-    
-    def get_object(self, pk):
+
+    def get(self, request, pk ):
         try:
-            return FizzBuzz.objects.get(pk=pk)
+            fizzbuzz = FizzBuzz.objects.get(pk=pk)
         except FizzBuzz.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk ):
-        fizzbuzz = self.get_object(pk)
         serializer = FizzBuzzSerializer(fizzbuzz)
         return Response(serializer.data)

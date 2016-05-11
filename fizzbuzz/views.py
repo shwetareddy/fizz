@@ -2,10 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from fizzbuzz.models import FizzBuzz
-from fizzbuzz.serializers import FizzBuzzSerializer, FizzBuzzPostSerializer
+from fizzbuzz.serializers import FizzBuzzSerializer
 
 class FizzBuzzView(APIView):
-    serializer_class = FizzBuzzPostSerializer
 
     def get(self, request):
         fizzbuzz = FizzBuzz.objects.all()
@@ -13,7 +12,7 @@ class FizzBuzzView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        request.data['useragent'] =request.META['HTTP_USER_AGENT']
+        request.data['useragent'] =request.META.get('HTTP_USER_AGENT', '')
 
         serializer = FizzBuzzSerializer(data=request.data)
         if serializer.is_valid():

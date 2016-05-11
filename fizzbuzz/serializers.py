@@ -5,15 +5,3 @@ class FizzBuzzSerializer(serializers.ModelSerializer):
     class Meta:
         model = FizzBuzz
         fields = ('fizzbuzz_id', 'useragent', 'creation_date', 'message')
-
-    def create(self, validated_data):
-        fizzbuzz = FizzBuzz(
-            useragent=validated_data['useragent'],
-        )
-        fizzbuzz.save()
-        return fizzbuzz
-
-class FizzBuzzPostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FizzBuzz
-        fields = ['message']
